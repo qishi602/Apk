@@ -1,41 +1,15 @@
-name: Build Android APK
-
-on:
-  workflow_dispatch: # 👈 讓你可以用手機手動點擊按鈕觸發打包
-
+name: Web Activation
+on: workflow_dispatch
 jobs:
-  buildForAndroid:
-    name: Build for Android 🤖
+  activation:
+    name: Request Manual Activation File
     runs-on: ubuntu-latest
     steps:
-      # 1. 下載你的專案原始碼
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: game-ci/unity-request-activation-file@v2
         with:
-          lfs: true
-
-      # 2. 快取 Unity Library 資料夾（能讓下次打包速度變快）
-      - name: Cache Library
-        uses: actions/cache@v4
+          unityVersion: 2022.3.6f1 # 👈 ⚠️請改成你專案實際的 Unity 版本
+      - uses: actions/upload-artifact@v4
         with:
-          path: Library
-          key: Library-Android-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-Android-
-
-      # 3. 呼叫 Game-CI 雲端 Unity 開始編譯 APK
-      - name: Run Unity Build
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }} # 讀取剛剛設定的憑證
-        with:
-          targetPlatform: Android
-          unityVersion: 2022.3.6f1 # 👈 再次確認這裡的版本與你專案一致
-          androidAppBundle: false # 設為 false 才會產出 .apk，而非 Google Play 的 .aab
-
-      # 4. 將打包好的 APK 上傳到 GitHub 伺服器供下載
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Build-Android
-          path: build/Android
+          name: activation-file
+          path: ${{ steps.unity-request-activation-file.outputs.filePath }}
