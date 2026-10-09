@@ -30,7 +30,7 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }} # 讀取剛剛設定的憑證
         with:
           targetPlatform: Android
-          unityVersion: 2022.3.0f1 # 👈 再次確認這裡的版本與你專案一致
+          unityVersion: 2022.3.26f1 # 👈 再次確認這裡的版本與你專案一致
           androidAppBundle: false # 設為 false 才會產出 .apk，而非 Google Play 的 .aab
 
       # 4. 將打包好的 APK 上傳到 GitHub 伺服器供下載
