@@ -1,0 +1,25 @@
+name: Build Android APK
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Unity Project
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: Android
+          unityVersion: 2022.3.6f1
+          androidAppBundle: false
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Build-Android
+          path: build/Android
